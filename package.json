@@ -3,11 +3,7 @@
   "version": "1.0.0",
   "description":
     "CraneML is a command line tool to, not only help you containerize your ML model, but also enables you to quickly lift and deploy it to the cloud with an endpoint.",
-<<<<<<< HEAD
-  "main": "dist/index.js",
-=======
   "main": "./dist/index.js",
->>>>>>> 835a3f022bb93c0a2aee3f824d577806f00a1729
   "repository": "git@github.com:User1m/craneml.git",
   "author": "Claudius Mbemba <clmb@microsoft.com>",
   "license": "MIT",
@@ -15,11 +11,7 @@
   "preferGlobal": true,
   "keywords": ["Docker", "Containers", "ML"],
   "bin": {
-<<<<<<< HEAD
-    "craneml": "dist/index.js"
-=======
     "craneml": "./dist/index.js"
->>>>>>> 835a3f022bb93c0a2aee3f824d577806f00a1729
   },
   "scripts": {
     "start": "npm run build && node ./dist/index.js c",
