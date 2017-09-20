@@ -8,7 +8,7 @@ Similarly CraneML is a command line tool to, not only help you containerize your
 
 ```
 > craneml create ...
-> craneml package ...
+> craneml build ...
 > craneml deploy ...
 ```
 
@@ -20,7 +20,15 @@ CraneML was created to help solve this issue.
 
 With a simple CLT, you should be able to package up your model and deploy to the cloud as a service.
 
+
 ## Installation
+
+```
+npm install
+npm start
+```
+
+### Installing CraneML Cli from repo
 
 ```
 npm install -g
@@ -29,7 +37,7 @@ npm install -g
 ## Running
 
 ```
-craneml
+craneml -h
 ```
 
 ## Contributors
