@@ -231,6 +231,7 @@ export class Program {
 
   public build(verbose: boolean) {
     if (!this.answers) {
+      this.create();
     } else {
       this.buildDockerContainer(
         `${this.userPrefs.answers.parentPath}/Dockerfile`,
@@ -247,8 +248,8 @@ export class Program {
   ) {
     if (verbose) {
       console.log(
-        `Docker command: docker build -f ${dockerFile} -t ${containerName} ${this
-          .answers.parentPath}`
+        `\n-------------------------\nDocker command: \ndocker build -f ${dockerFile} -t ${containerName} ${this
+          .answers.parentPath}\n-------------------------\n`
       );
     }
     sh.exec(
