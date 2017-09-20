@@ -126,7 +126,6 @@ export class Program {
   private userPrefs = new Preferences("craneml");
   private answers: Answers;
 
-
   public start(): void {
     clear();
     console.log(
@@ -179,16 +178,15 @@ export class Program {
     });
   }
 
-<<<<<<< HEAD
   public build(verbose: boolean) {
-    this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`, verbose);
-=======
-  public build(): void {
-    this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`);
->>>>>>> 55ec9bcf9adfc9d19666fa21f244f94bda46ab0c
+    this.buildDockerContainer(
+      `${this.answers.parentPath}/Dockerfile`,
+      `mnist`,
+      verbose
+    );
   }
 
-  private getUserInfo(): void{
+  private getUserInfo(): void {
     console.log(chalk.yellow("CraneML needs some user information"));
     prompt(questions).then(answers => {
       console.log(
@@ -199,7 +197,10 @@ export class Program {
     });
   }
 
-  private createDockerFile(answers: Answers, user: User = this.userPrefs.user): void{
+  private createDockerFile(
+    answers: Answers,
+    user: User = this.userPrefs.user
+  ): void {
     writeFileAsync(
       `${answers.parentPath}/Dockerfile`,
       generateDocker(answers, user)
@@ -236,26 +237,24 @@ export class Program {
       });
   }
 
-<<<<<<< HEAD
-  private buildDockerContainer(dockerFile: string, containerName: string, verbose: boolean) {
-    if(verbose){
-      // console.log(`Docker command: docker build -f ${dockerFile} -t ${containerName} ${this.answers
-      //     .parentPath}`);
+  private buildDockerContainer(
+    dockerFile: string,
+    containerName: string,
+    verbose: boolean
+  ) {
+    if (verbose) {
+      console.log(
+        `Docker command: docker build -f ${dockerFile} -t ${containerName} ${this
+          .answers.parentPath}`
+      );
       console.log("verbose flag detected");
     } else {
       console.log("no flag detected");
     }
-    // sh.exec(
-    //   `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
-    //     .parentPath}`
-    // );
-=======
-  private buildDockerContainer(dockerFile: string, containerName: string): void {
     sh.exec(
       `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
         .parentPath}`
     );
->>>>>>> 55ec9bcf9adfc9d19666fa21f244f94bda46ab0c
   }
 
   // sh.exec("which python").then(py => {
