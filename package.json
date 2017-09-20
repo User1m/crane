@@ -15,7 +15,7 @@
   },
   "scripts": {
     "start": "npm run build && node index.js c",
-    "install": "npm install -g",
+    "install-crane": "npm install -g",
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
     "pack": "webpack"
