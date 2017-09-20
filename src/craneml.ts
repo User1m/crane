@@ -125,8 +125,9 @@ const generateDockerIgnore = modelName => {
 export class Program {
   private userPrefs = new Preferences("craneml");
   private answers: Answers;
-  
-  start() {
+
+
+  public start(): void {
     clear();
     console.log(
       chalk.yellow(
@@ -150,15 +151,15 @@ export class Program {
   //   });
   // }
 
-  private checkUserPrefs() {
+  private checkUserPrefs(): Promise<any> {
     return Promise.resolve(this.userPrefs.user);
   }
 
-  public getContact(name: string) {
+  public getContact(name: string): void {
     console.log(`Getting: ${name}`);
   }
 
-  public create() {
+  public create(): void {
     this.checkUserPrefs().then(success => {
       if (!success) {
         this.getUserInfo();
@@ -178,23 +179,27 @@ export class Program {
     });
   }
 
+<<<<<<< HEAD
   public build(verbose: boolean) {
     this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`, verbose);
+=======
+  public build(): void {
+    this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`);
+>>>>>>> 55ec9bcf9adfc9d19666fa21f244f94bda46ab0c
   }
 
-  private getUserInfo() {
-    const _this = this;
+  private getUserInfo(): void{
     console.log(chalk.yellow("CraneML needs some user information"));
     prompt(questions).then(answers => {
       console.log(
         `You entered: ${answers.firstName}, ${answers.lastName}, ${answers.email}`
       );
-      _this.userPrefs.user = answers;
+      this.userPrefs.user = answers;
       console.log(chalk.yellow("Great! You're all set to run CraneML"));
     });
   }
 
-  private createDockerFile(answers: Answers, user: User = this.userPrefs.user) {
+  private createDockerFile(answers: Answers, user: User = this.userPrefs.user): void{
     writeFileAsync(
       `${answers.parentPath}/Dockerfile`,
       generateDocker(answers, user)
@@ -231,6 +236,7 @@ export class Program {
       });
   }
 
+<<<<<<< HEAD
   private buildDockerContainer(dockerFile: string, containerName: string, verbose: boolean) {
     if(verbose){
       // console.log(`Docker command: docker build -f ${dockerFile} -t ${containerName} ${this.answers
@@ -243,6 +249,13 @@ export class Program {
     //   `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
     //     .parentPath}`
     // );
+=======
+  private buildDockerContainer(dockerFile: string, containerName: string): void {
+    sh.exec(
+      `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
+        .parentPath}`
+    );
+>>>>>>> 55ec9bcf9adfc9d19666fa21f244f94bda46ab0c
   }
 
   // sh.exec("which python").then(py => {
