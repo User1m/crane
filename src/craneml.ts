@@ -20,7 +20,7 @@ interface Answers {
   parentPath: string;
   folderName: string;
   scriptName: string;
-  containerName: string;
+  imageName: string;
   gpu: string;
 }
 
@@ -68,7 +68,7 @@ const createQs = [
   },
   {
     type: "input",
-    name: "containerName",
+    name: "imageName",
     message: "Enter the name your container should be called ..."
   }
 ];
@@ -234,8 +234,8 @@ export class Program {
       this.create();
     } else {
       this.buildDockerContainer(
-        `${this.userPrefs.answers.parentPath}/Dockerfile`,
-        `${this.userPrefs.answers.containerName}`,
+        `${this.answers.parentPath}/Dockerfile`,
+        this.answers.imageName,
         verbose
       );
     }
@@ -243,18 +243,46 @@ export class Program {
 
   private buildDockerContainer(
     dockerFile: string,
-    containerName: string,
+    imageName: string,
     verbose: boolean
   ) {
     if (verbose) {
       console.log(
-        `\n-------------------------\nDocker command: \ndocker build -f ${dockerFile} -t ${containerName} ${this
+        `\n-------------------------\nDocker command: \ndocker build -f ${dockerFile} -t ${imageName} ${this
           .answers.parentPath}\n-------------------------\n`
       );
     }
     sh.exec(
-      `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
+      `sudo docker build -f ${dockerFile} -t ${imageName} ${this.answers
         .parentPath}`
+    );
+  }
+
+  public run(verbose: boolean) {
+    if (!this.answers) {
+      this.create();
+    } else {
+      this.runDockerContainer(this.answers.imageName, verbose);
+    }
+  }
+
+  private runDockerContainer(
+    imageName: string,
+    verbose: boolean,
+    containerName: string = "test"
+  ) {
+    if (verbose) {
+      console.log(
+        `\n-------------------------\nDocker command: \ndocker run -d -p 50001:80 --name ${containerName} ${imageName}\n-------------------------\n`
+      );
+    }
+    sh.exec(
+      `sudo docker run -d -p 50001:80 --name ${containerName} ${imageName}`
+    );
+    console.log(
+      chalk.green(
+        `Container named ${containerName} deployed locally and accessible via localhost:50001`
+      )
     );
   }
 

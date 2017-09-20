@@ -22,23 +22,30 @@ program
   .command("build | b ")
   .alias("b")
   .description("builds a docker image from a dockerfile")
-  .option('-v, --verbose','Output Docker commands craneml is executing in the background')
-  .action((options) => {
+  .option(
+    "-v, --verbose",
+    "Outputs the Docker commands craneml is executing in the background"
+  )
+  .action(options => {
     craneml.build(options.verbose);
   });
 
-// program
-//   .command("getContact <name>")
-//   .alias("r")
-//   .description("Get contact")
-//   .action(name => {
-//     craneml.getContact(name);
-//   });
+program
+  .command("run | r ")
+  .alias("r")
+  .description("creates a local docker container runs a docker image from")
+  .option(
+    "-v, --verbose",
+    "Outputs the Docker commands craneml is executing in the background"
+  )
+  .action(options => {
+    craneml.run(options.verbose);
+  });
 
 craneml.start();
 
 // Assert that a VALID command is provided
-if (!_process.argv.slice(2).length || !/[cb]/.test(_process.argv.slice(2))) {
+if (!_process.argv.slice(2).length || !/[cbr]/.test(_process.argv.slice(2))) {
   program.outputHelp();
   _process.exit();
 }
