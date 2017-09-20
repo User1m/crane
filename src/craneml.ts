@@ -126,7 +126,7 @@ export class Program {
   private userPrefs = new Preferences("craneml");
   private answers: Answers = this.userPrefs.answers;
 
-  start() {
+  public start(): void {
     clear();
     console.log(
       chalk.yellow(
@@ -150,15 +150,15 @@ export class Program {
   //   });
   // }
 
-  private checkUserPrefs() {
+  private checkUserPrefs(): Promise<any> {
     return Promise.resolve(this.userPrefs.user);
   }
 
-  public getContact(name: string) {
+  public getContact(name: string): void {
     console.log(`Getting: ${name}`);
   }
 
-  public create() {
+  public create(): void {
     this.checkUserPrefs().then(success => {
       if (!success) {
         this.getUserInfo();
@@ -178,19 +178,21 @@ export class Program {
     });
   }
 
-  private getUserInfo() {
-    const _this = this;
+  private getUserInfo(): void {
     console.log(chalk.yellow("CraneML needs some user information"));
     prompt(questions).then(answers => {
       console.log(
         `You entered: ${answers.firstName}, ${answers.lastName}, ${answers.email}`
       );
-      _this.userPrefs.user = answers;
+      this.userPrefs.user = answers;
       console.log(chalk.yellow("Great! You're all set to run CraneML"));
     });
   }
 
-  private createDockerFile(answers: Answers, user: User = this.userPrefs.user) {
+  private createDockerFile(
+    answers: Answers,
+    user: User = this.userPrefs.user
+  ): void {
     writeFileAsync(
       `${answers.parentPath}/Dockerfile`,
       generateDocker(answers, user)
@@ -227,18 +229,28 @@ export class Program {
       });
   }
 
-  public build() {
+  public build(verbose: boolean) {
     if (!this.answers) {
     } else {
       this.buildDockerContainer(
         `${this.userPrefs.answers.parentPath}/Dockerfile`,
-        `${this.userPrefs.answers.containerName}`
+        `${this.userPrefs.answers.containerName}`,
+        verbose
       );
     }
   }
 
-  private buildDockerContainer(dockerFile: string, containerName: string) {
-    console.log();
+  private buildDockerContainer(
+    dockerFile: string,
+    containerName: string,
+    verbose: boolean
+  ) {
+    if (verbose) {
+      console.log(
+        `Docker command: docker build -f ${dockerFile} -t ${containerName} ${this
+          .answers.parentPath}`
+      );
+    }
     sh.exec(
       `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
         .parentPath}`
