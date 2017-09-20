@@ -76,7 +76,7 @@ const createQs = [
 const generateDocker = (answers: Answers, user: User) => {
   return `
   # Start with ML base image
-  FROM floydhub/dl-docker
+  FROM floydhub/dl-docker:cpu
   MAINTAINER ${user.firstName} ${user.lastName} ${user.email}
 
   # Set ~/home as working directory
@@ -89,7 +89,7 @@ const generateDocker = (answers: Answers, user: User) => {
   EXPOSE 80 8080 443
 
   # Copy Project & API
-  COPY ${answers.parentPath}/${answers.folderName} model
+  COPY /${answers.folderName} model
   COPY /api api
 
   # Setup node
@@ -100,13 +100,13 @@ const generateDocker = (answers: Answers, user: User) => {
   `;
 };
 
-const generateDockerIgnore = modelName => {
+const generateDockerIgnore = projectPath => {
   return `
   # Ignore Everything to start:
   *
 
   # Un-ignore these dirs:
-  !${modelName}
+  !${projectPath}/
 
   # Ignore these:
   **/*.git
@@ -124,7 +124,7 @@ const generateDockerIgnore = modelName => {
 };
 export class Program {
   private userPrefs = new Preferences("craneml");
-  private answers: Answers;
+  private answers: Answers = this.userPrefs.answers;
 
   start() {
     clear();
@@ -171,15 +171,11 @@ export class Program {
         prompt(createQs).then(answers => {
           console.log(JSON.stringify(answers, null, 2));
           this.answers = answers as Answers;
-          this.userPrefs.create = answers;
+          this.userPrefs.answers = answers;
           this.createDockerFile(this.answers);
         });
       }
     });
-  }
-
-  public build() {
-    this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`);
   }
 
   private getUserInfo() {
@@ -209,7 +205,7 @@ export class Program {
       .then(() => {
         writeFileAsync(
           `${answers.parentPath}/.dockerignore`,
-          generateDockerIgnore(`${answers.parentPath}/${answers.folderName}`)
+          generateDockerIgnore(answers.folderName)
         );
       })
       .then(() => {
@@ -231,7 +227,18 @@ export class Program {
       });
   }
 
+  public build() {
+    if (!this.answers) {
+    } else {
+      this.buildDockerContainer(
+        `${this.userPrefs.answers.parentPath}/Dockerfile`,
+        `${this.userPrefs.answers.containerName}`
+      );
+    }
+  }
+
   private buildDockerContainer(dockerFile: string, containerName: string) {
+    console.log();
     sh.exec(
       `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
         .parentPath}`
