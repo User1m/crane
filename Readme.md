@@ -23,7 +23,13 @@ With a simple CLT, you should be able to package up your model and deploy to the
 ## Installation
 
 ```
-npm install craneml
+npm install -g
+```
+
+## Running
+
+```
+craneml
 ```
 
 ## Contributors
