@@ -126,7 +126,7 @@ export class Program {
   private userPrefs = new Preferences("craneml");
   private answers: Answers;
 
-  start() {
+  public start(): void {
     clear();
     console.log(
       chalk.yellow(
@@ -150,15 +150,15 @@ export class Program {
   //   });
   // }
 
-  private checkUserPrefs() {
+  private checkUserPrefs(): Promise<any> {
     return Promise.resolve(this.userPrefs.user);
   }
 
-  public getContact(name: string) {
+  public getContact(name: string): void {
     console.log(`Getting: ${name}`);
   }
 
-  public create() {
+  public create(): void {
     this.checkUserPrefs().then(success => {
       if (!success) {
         this.getUserInfo();
@@ -178,11 +178,11 @@ export class Program {
     });
   }
 
-  public build() {
+  public build(): void {
     this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`);
   }
 
-  private getUserInfo() {
+  private getUserInfo(): void{
     console.log(chalk.yellow("CraneML needs some user information"));
     prompt(questions).then(answers => {
       console.log(
@@ -193,7 +193,7 @@ export class Program {
     });
   }
 
-  private createDockerFile(answers: Answers, user: User = this.userPrefs.user) {
+  private createDockerFile(answers: Answers, user: User = this.userPrefs.user): void{
     writeFileAsync(
       `${answers.parentPath}/Dockerfile`,
       generateDocker(answers, user)
@@ -230,7 +230,7 @@ export class Program {
       });
   }
 
-  private buildDockerContainer(dockerFile: string, containerName: string) {
+  private buildDockerContainer(dockerFile: string, containerName: string): void {
     sh.exec(
       `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
         .parentPath}`
