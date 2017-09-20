@@ -14,9 +14,9 @@
     "craneml": "./index.js"
   },
   "scripts": {
-    "start": "node index.js c",
+    "start": "npm run build && node index.js c",
     "install": "npm install -g",
-    "build": "npm run pack",
+    "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
     "pack": "webpack"
   },
