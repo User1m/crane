@@ -125,7 +125,7 @@ const generateDockerIgnore = modelName => {
 export class Program {
   private userPrefs = new Preferences("craneml");
   private answers: Answers;
-
+  
   start() {
     clear();
     console.log(
@@ -178,8 +178,8 @@ export class Program {
     });
   }
 
-  public build() {
-    this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`);
+  public build(verbose: boolean) {
+    this.buildDockerContainer(`${this.answers.parentPath}/Dockerfile`, `mnist`, verbose);
   }
 
   private getUserInfo() {
@@ -231,11 +231,18 @@ export class Program {
       });
   }
 
-  private buildDockerContainer(dockerFile: string, containerName: string) {
-    sh.exec(
-      `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
-        .parentPath}`
-    );
+  private buildDockerContainer(dockerFile: string, containerName: string, verbose: boolean) {
+    if(verbose){
+      // console.log(`Docker command: docker build -f ${dockerFile} -t ${containerName} ${this.answers
+      //     .parentPath}`);
+      console.log("verbose flag detected");
+    } else {
+      console.log("no flag detected");
+    }
+    // sh.exec(
+    //   `sudo docker build -f ${dockerFile} -t ${containerName} ${this.answers
+    //     .parentPath}`
+    // );
   }
 
   // sh.exec("which python").then(py => {

@@ -19,11 +19,12 @@ program
   });
 
 program
-  .command("build | b")
+  .command("build | b ")
   .alias("b")
   .description("builds a docker image from a dockerfile")
-  .action(() => {
-    craneml.build();
+  .option('-v, --verbose','Output Docker commands craneml is executing in the background')
+  .action((options) => {
+    craneml.build(options.verbose);
   });
 
 // program
