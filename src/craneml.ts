@@ -183,13 +183,12 @@ export class Program {
   }
 
   private getUserInfo() {
-    const _this = this;
     console.log(chalk.yellow("CraneML needs some user information"));
     prompt(questions).then(answers => {
       console.log(
         `You entered: ${answers.firstName}, ${answers.lastName}, ${answers.email}`
       );
-      _this.userPrefs.user = answers;
+      this.userPrefs.user = answers;
       console.log(chalk.yellow("Great! You're all set to run CraneML"));
     });
   }
