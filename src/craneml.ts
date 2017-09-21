@@ -81,6 +81,7 @@ const generateDocker = (answers: Answers, user: User) => {
 
   # Install Node
   RUN sudo apt-get update; curl -sL "https://deb.nodesource.com/setup_8.x" | sudo bash -; sudo apt-get install -y nodejs;
+  RUN sudo pip install opencv-python; sudo pip install --upgrade keras;
 
   # Set ~/home as working directory
   WORKDIR /home
@@ -112,10 +113,10 @@ const generateDockerIgnore = projectPath => {
   **/*.git
   **/*.gitignore
   **/*.md
-  **/*.txt
-  **/*.png
-  **/*.jpg
-  **/*.log
+  # **/*.txt
+  # **/*.png
+  # **/*.jpg
+  # **/*.log
   **/node_modules
 
   # Don't ignore these:
