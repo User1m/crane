@@ -79,6 +79,9 @@ const generateDocker = (answers: Answers, user: User) => {
   FROM floydhub/dl-docker:cpu
   MAINTAINER ${user.firstName} ${user.lastName} ${user.email}
 
+  # Install Node
+  RUN sudo apt-get update; curl -sL "https://deb.nodesource.com/setup_8.x" | sudo bash -; sudo apt-get install -y nodejs;
+
   # Set ~/home as working directory
   WORKDIR /home
 
@@ -92,9 +95,8 @@ const generateDocker = (answers: Answers, user: User) => {
   COPY /${answers.folderName} project
   COPY /api api
 
-  # Start APP and API
-  CMD cd ../api; sudo node api.js
-  `;
+  # Start API
+  CMD cd api/; sudo RUNSCRIPT=${answers.folderName}/${answers.scriptName} node api.js`;
 };
 
 const generateDockerIgnore = projectPath => {
@@ -117,9 +119,9 @@ const generateDockerIgnore = projectPath => {
   **/node_modules
 
   # Don't ignore these:
-  !requirements.txt
-  `;
+  !requirements.txt`;
 };
+
 export class Program {
   private userPrefs = new Preferences("craneml");
   private answers: Answers = this.userPrefs.answers;
@@ -251,13 +253,13 @@ export class Program {
   ) {
     if (verbose) {
       console.log(
-        `\n-------------------------\nDocker command: \ndocker build -f ${dockerFile} -t ${imageName} ${this
+        `\n-------------------------\nDocker command: \ndocker build --force-rm -f ${dockerFile} -t ${imageName} ${this
           .answers.parentPath}\n-------------------------\n`
       );
     }
     sh.exec(
-      `sudo docker build -f ${dockerFile} -t ${imageName} ${this.answers
-        .parentPath}`
+      `sudo docker build --force-rm -f ${dockerFile} -t ${imageName} ${this
+        .answers.parentPath}`
     );
   }
 
@@ -276,12 +278,13 @@ export class Program {
   ) {
     if (verbose) {
       console.log(
-        `\n-------------------------\nDocker command: \ndocker run -d -p 50001:80 --name ${containerName} ${imageName}\n-------------------------\n`
+        `\n-------------------------\nDocker command: \ndocker run -d -p 50001:8080 --name ${containerName} ${imageName}\ndocker ps -a \n-------------------------\n`
       );
     }
     sh.exec(
-      `sudo docker run -d -p 50001:80 --name ${containerName} ${imageName}`
+      `sudo docker run -d -p 50001:8080 --name ${containerName} ${imageName}`
     );
+    sh.exec(`sudo docker ps -a`);
     console.log(
       chalk.green(
         `Container named ${containerName} deployed locally and accessible via localhost:50001`

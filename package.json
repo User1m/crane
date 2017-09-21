@@ -17,9 +17,9 @@
     "craneml": "./dist/index.js"
   },
   "scripts": {
-    "start": "npm run build && npm run pack-api && node ./dist/index.js c",
+    "start": "npm run build && npm run pack && node ./dist/index.js c",
     "install-crane": "npm install -g",
-    "build": "tsc -p tsconfig.json",
+    "build": "tsc -p tsconfig.json && npm run pack",
     "watch": "tsc -w -p tsconfig.json",
     "pack": "webpack",
     "pack-api": "webpack dist/api/server.js --output-path ./dist/api/ --output-filename api.js"
@@ -34,6 +34,7 @@
   },
   "dependencies": {
     "bluebird": "^3.5.0",
+    "body-parser": "^1.18.1",
     "chalk": "^2.1.0",
     "clear": "^0.0.1",
     "clui": "^0.3.6",
