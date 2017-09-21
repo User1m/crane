@@ -1,8 +1,9 @@
 {
   "name": "craneml-api",
   "description": "Simple api to allow interaction with model",
-  "main": "./server.js",
+  "main": "./api.js",
   "scripts": {
+    "start": "node api.js",
     "pack": "webpack"
   },
   "devDependencies": {

@@ -93,7 +93,7 @@ const generateDocker = (answers: Answers, user: User) => {
   COPY /api api
 
   # Start APP and API
-  CMD cd ../api; sudo npm start
+  CMD cd ../api; sudo node api.js
   `;
 };
 
@@ -104,6 +104,7 @@ const generateDockerIgnore = projectPath => {
 
   # Un-ignore these dirs:
   !${projectPath}/
+  !api/
 
   # Ignore these:
   **/*.git
@@ -209,6 +210,7 @@ export class Program {
             `The .dockerIgnore was created at ${answers.parentPath}/.dockerIgnore!`
           )
         );
+        console.log();
         console.log(
           chalk.yellow(
             `Note: Update the .dockerignore before running "craneml build" so only the files needed are included in the docker context.`
@@ -216,11 +218,11 @@ export class Program {
         );
       })
       .then(() => {
-        sh.cp("-f", "./api/", `${answers.parentPath}/api/`);
+        sh.cp("-Rf", "./dist/api/", `${answers.parentPath}/api/`);
       })
       .then(() => {
         console.log(
-          chalk.yellow(`API created for you at ${answers.parentPath}/api`)
+          chalk.green(`API created for you at ${answers.parentPath}/api`)
         );
       })
       .catch((err: Error) => {
