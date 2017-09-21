@@ -1,44 +1,18 @@
 #!/usr/bin/env node
-import { Program } from "./craneml";
-import * as commander from "commander";
-const program = commander;
-const _process = process as any;
 
-program
-  .version("0.0.1")
-  .description("Containerize and deploy ML solutions with ease");
+import * as minimist from 'minimist';
+import { commands } from './commands'
 
-const craneml = new Program();
+const DEFAULT_COMMAND = 'help';
 
-program
-  .command("create | c")
-  .alias("c")
-  .description("creates a dockerfile and .dockerignore")
-  .action(() => {
-    craneml.create();
-  });
+const cliArguments = minimist(process.argv.slice(2));
+console.log('cli args', cliArguments);
+const commandName = cliArguments._.length > 0 ? cliArguments._.shift() : DEFAULT_COMMAND;
+let command = commands[commandName];
 
-program
-  .command("build | b")
-  .alias("b")
-  .description("builds a docker image from a dockerfile")
-  .action(() => {
-    craneml.build();
-  });
-
-// program
-//   .command("getContact <name>")
-//   .alias("r")
-//   .description("Get contact")
-//   .action(name => {
-//     craneml.getContact(name);
-//   });
-
-craneml.start();
-
-// Assert that a VALID command is provided
-if (!_process.argv.slice(2).length || !/[cb]/.test(_process.argv.slice(2))) {
-  program.outputHelp();
-  _process.exit();
+if(!command) {
+    console.log(`Unknown command: ${commandName}`)
+    command = commands[DEFAULT_COMMAND];
 }
-program.parse(_process.argv);
+
+command.fn(cliArguments);
