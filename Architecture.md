@@ -36,3 +36,19 @@ The user is not likely to know the semantics of running a docker container and s
 
 ![](./images/image2.png)
 
+## create.ts - Code to build docker image for ML Model 
+
+The purpose of **create.ts** is to build the docker container that will be the hosting environment for the ML model. It builds the **Dockerfile**, which acts as the blueprint for the building of the docker container. **create.ts** will also install the node.js-based API that will allow users communicate with the docker container.
+
+|Function|Purpose|
+|---|---|
+|createCommand()|Gathers user preferences (name, email)|
+|create()|Calls createDockerFile()|
+|createDockerFile()|Builds Dockerfile, .dockerignore. Also copies the API to ./dist/api|
+
+## server.ts - Code to provide an API interface to support uploading input into the docker container
+
+The purpose of **server.ts** is to support a REST-based interface to the machine learning model. It focuses on supporting the ability to upload an image and running the ML model against that image. The challenge here is to generalize the approach such that multiple images, video or text data can also be provided as input to the ML algorithm.
+
+The two main APIs available are **saveImageToDisk()** and **executeScript()**. Again, the challenge is to support more input types, meaning it may be necessary to add methods saveMultipleImagesToDisk(), saveVideosToDisk(), saveTextToDisk().
+
