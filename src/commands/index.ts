@@ -1,5 +1,6 @@
 
 import { createCommand } from './create'
+import { helpCommand } from './help'
 
 export interface Command {
     fn: Function;
@@ -9,10 +10,10 @@ export interface Command {
 export const commands: { [command: string]: Command } = {
     create: {
         fn: createCommand,
-        help: 'Something something blah',
+        help: 'Scaffolds a new project. options -f: force create project',
     },
     help: {
-        fn: () => { console.log('help!')},
-        help: 'Shows this help screen',
+        fn: helpCommand,
+        help: 'Shows this help screen.',
     },
 };
