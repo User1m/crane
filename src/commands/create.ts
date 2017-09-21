@@ -89,9 +89,13 @@ function createDockerFile(projectInfo: ProjectInfo, user: User): void {
   fs
     .writeFile(
       `${projectInfo.parentPath}/Dockerfile`,
-      generateDockerFile(user, projectInfo)
+      generateDockerFile(user, {
+        folderName: projectInfo.folderName,
+        runScript: projectInfo.scriptName
+      })
     )
     .then(() => {
+      fs.writeFile( `${projectInfo.parentPath}/requirements.txt`,"");
       console.log(
         chalk.green(
           `The Dockerfile was created at ${projectInfo.parentPath}/Dockerfile!`

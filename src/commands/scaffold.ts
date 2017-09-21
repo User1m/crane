@@ -72,5 +72,9 @@ function createProject(projectName: string, maintainer: User, runScript: string)
     path.join(projectName, DOCKER_IGNORE_FILE_NAME),
     generateDockerIgnoreFile("project")
   );
+  fs.outputFileSync(
+    path.join(projectName, "requirements.txt"),
+    ""
+  );
   console.log(`Project ${projectName} created.`);
 }
