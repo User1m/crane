@@ -37,12 +37,12 @@ function buildDockerContainer(
 ) {
   if (verbose) {
     console.log(
-      `\n-------------------------\nDocker command: \ndocker build --force-rm -f ${dockerFile} -t ${imageName} ${userPrefs
+      `\n-------------------------\nDocker command: \ndocker build --force-rm --no-cache -f ${dockerFile} -t ${imageName} ${userPrefs
         .projectInfo.parentPath}\n-------------------------\n`
     );
   }
   sh.exec(
-    `sudo docker build --force-rm -f ${dockerFile} -t ${imageName} ${userPrefs
+    `sudo docker build --force-rm --no-cache -f ${dockerFile} -t ${imageName} ${userPrefs
       .projectInfo.parentPath}`
   );
 }

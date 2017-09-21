@@ -36,7 +36,7 @@ export const generateDockerFile = (
     EXPOSE 80 8080 443
 
     # Copy Project & API
-    COPY /project project
+    COPY /${project.folderName} project
     COPY /api api
 
     # Start API

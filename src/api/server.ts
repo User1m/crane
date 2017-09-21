@@ -28,6 +28,8 @@ app.route("/run").post((req: any, res: any) => {
   readRequest(req, res);
 });
 
+const imagePath = "/input.png";
+
 const readRequest = (req: any, res: any) => {
   const contentType = req.headers["content-type"] || "";
   const mime = contentType.split(";")[0];
@@ -57,14 +59,14 @@ const readRequest = (req: any, res: any) => {
 
 const saveImageToDisk = data => {
   console.log("SAVING IMAGE TO DISK.....");
-  fs.writeFile("/input.png", data, "binary", (err: Error) => {
+  fs.writeFile(imagePath, data, "binary", (err: Error) => {
     if (err) {
       console.log("ERROR!!! SAVING IMAGE TO DISK.....");
       console.log(err);
     } else {
       console.log("FINISH SAVING IMAGE TO DISK.....");
-      console.log(`input.png: IMAGE SAVED`);
-      executeScript((process as any).env.RUNSCRIPT, "/input.png", resAlias);
+      console.log(`${imagePath}: IMAGE SAVED`);
+      executeScript((process as any).env.RUNSCRIPT, imagePath, resAlias);
     }
   });
 };
@@ -74,7 +76,7 @@ const executeScript = (runScript: string, input: string, res: any) => {
   //     `KERAS_BACKEND=theano /usr/bin/python ${runScript} ${input}`,
 
   sh.exec(
-    `KERAS_BACKEND=theano /usr/bin/python ${runScript} ./images/8.png`,
+    `KERAS_BACKEND=theano /usr/bin/python ${runScript} ${input}`,
     function(code: any, stdout: any, stderr: any) {
       if (code !== 0) {
         console.log("Exit code:", code);
@@ -83,7 +85,7 @@ const executeScript = (runScript: string, input: string, res: any) => {
       } else {
         console.log("Program output:", stdout);
         console.log("FINISHED RUNNING executeScript SCRIPT.....");
-        res.json(JSON.stringify(stdout, null, 2));
+        res.send(stdout);
       }
     }
   );
