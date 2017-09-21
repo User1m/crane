@@ -67,16 +67,14 @@ function createProject(projectName: string, maintainer: User): void {
     path.join(projectName, DOCKER_FILE_NAME),
     generateDockerFile(maintainer, {
       folderName: "project",
-      runScript: "main.py"
+      runScript: "main.py",
+      requirements: ""
     })
   );
   fs.outputFileSync(
     path.join(projectName, DOCKER_IGNORE_FILE_NAME),
     generateDockerIgnoreFile("project")
   );
-  fs.outputFileSync(
-    path.join(projectName, "requirements.txt"),
-    ""
-  );
+  fs.outputFileSync(path.join(projectName, "requirements.txt"), "");
   console.log(`Project ${projectName} created.`);
 }

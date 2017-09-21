@@ -8,8 +8,7 @@ import * as Preferences from "preferences";
 import {
   User,
   DOCKER_FILE_NAME,
-  generateDockerFile,
-  ProjectInfo
+  generateDockerFile
 } from "../file-templates/docker-file.template";
 import {
   DOCKER_IGNORE_FILE_NAME,

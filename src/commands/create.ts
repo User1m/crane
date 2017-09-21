@@ -9,8 +9,7 @@ import { prompt } from "inquirer";
 import {
   User,
   DOCKER_FILE_NAME,
-  generateDockerFile,
-  ProjectInfo
+  generateDockerFile
 } from "../file-templates/docker-file.template";
 import {
   DOCKER_IGNORE_FILE_NAME,
@@ -47,19 +46,34 @@ const createQs = [
   {
     type: "input",
     name: "folderName",
-    message: "Enter the your ml project folder name ..."
+    message: "Enter the name of the project folder ..."
   },
   {
     type: "input",
     name: "scriptName",
-    message: "Enter the name of your python run script ..."
+    message: "Enter the name of your python run script (entry point) ..."
   },
   {
     type: "input",
     name: "imageName",
-    message: "Enter the name your container should be called ..."
+    message:
+      "Enter the name your container should be called (i.e user1m/keras) ..."
+  },
+  {
+    type: "input",
+    name: "requirements",
+    message: "Enter the path to your requirements.txt (hit enter to skip) ..."
   }
 ];
+
+export interface ProjectInfo {
+  parentPath: string;
+  folderName: string;
+  scriptName: string;
+  imageName: string;
+  requirements: string;
+  gpu?: string;
+}
 
 export function createCommand(cliArgs: any): void {
   userPrefs = new Preferences("craneml");
@@ -91,11 +105,12 @@ function createDockerFile(projectInfo: ProjectInfo, user: User): void {
       `${projectInfo.parentPath}/Dockerfile`,
       generateDockerFile(user, {
         folderName: projectInfo.folderName,
-        runScript: projectInfo.scriptName
+        runScript: projectInfo.scriptName,
+        requirements: projectInfo.requirements
       })
     )
     .then(() => {
-      fs.writeFile( `${projectInfo.parentPath}/requirements.txt`,"");
+      fs.writeFile(`${projectInfo.parentPath}/requirements.txt`, "");
       console.log(
         chalk.green(
           `The Dockerfile was created at ${projectInfo.parentPath}/Dockerfile!`

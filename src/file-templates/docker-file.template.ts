@@ -4,19 +4,15 @@ export interface User {
   email: string;
 }
 
-export interface ProjectInfo {
-  parentPath: string;
-  folderName: string;
-  scriptName: string;
-  imageName: string;
-  gpu?: string;
-}
-
 export const DOCKER_FILE_NAME = "Dockerfile";
 
 export const generateDockerFile = (
   user: User,
-  project: { folderName: string; runScript: string }
+  project: {
+    folderName: string;
+    runScript: string;
+    requirements: string;
+  }
 ) => {
   return `
     # Start with ML base image
@@ -26,7 +22,9 @@ export const generateDockerFile = (
     # Install Node
     RUN sudo apt-get update; curl -sL "https://deb.nodesource.com/setup_8.x" | sudo bash -; sudo apt-get install -y nodejs;
     RUN sudo pip install opencv-python; sudo pip install --upgrade pip keras h5py theano tensorflow;
-    RUN sudo pip isntall -r requirements.txt;
+    ${project.requirements !== ""
+      ? `RUN sudo pip install -r ${project.requirements}`
+      : ""}
 
     # Set ~/home as working directory
     WORKDIR /home
