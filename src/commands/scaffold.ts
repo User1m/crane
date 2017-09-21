@@ -2,13 +2,13 @@
 import * as syncPrompt from 'prompt-sync';
 import * as fs from 'fs-extra';
 import * as path from 'path';
-import { DockerMaintainer, generateDockerFile } from '../file-templates/docker-file.template';
+import { DockerMaintainer, DOCKER_FILE_NAME, generateDockerFile } from '../file-templates/docker-file.template';
+import { DOCKER_IGNORE_FILE_NAME, generateDockerIgnore } from '../file-templates/docker-ignore.template';
 
 const prompt = syncPrompt();
 const PROJECT_DIR = '/project';
-const DOCKER_FILE_NAME = 'Dockerfile';
 
-export function createCommand(cliArgs: any): void {
+export function scaffoldCommand(cliArgs: any): void {
     let projectName = prompt('Project Name: ');
 
     if(!projectName) {
@@ -49,5 +49,6 @@ function createProject(projectName: string, maintainer: DockerMaintainer): void 
     fs.ensureDirSync(projectName);
     fs.ensureDirSync(path.join(projectName, PROJECT_DIR));
     fs.outputFileSync(path.join(projectName, DOCKER_FILE_NAME), generateDockerFile(maintainer));
+    fs.outputFileSync(path.join(projectName, DOCKER_IGNORE_FILE_NAME), generateDockerIgnore());
     console.log(`Project ${projectName} created.`);
 }

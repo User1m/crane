@@ -1,5 +1,5 @@
 
-import { createCommand } from './create'
+import { scaffoldCommand } from './scaffold'
 import { helpCommand } from './help'
 
 export interface Command {
@@ -8,8 +8,8 @@ export interface Command {
 }
 
 export const commands: { [command: string]: Command } = {
-    create: {
-        fn: createCommand,
+    scaffold: {
+        fn: scaffoldCommand,
         help: 'Scaffolds a new project. options -f: force create project',
     },
     help: {
