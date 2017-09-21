@@ -16,7 +16,7 @@ export const DOCKER_FILE_NAME = "Dockerfile";
 
 export const generateDockerFile = (
   user: User,
-  project: { folderName: string; scriptName: string }
+  runScriptPath: string,
 ) => {
   return `
     # Start with ML base image
@@ -37,9 +37,9 @@ export const generateDockerFile = (
     EXPOSE 80 8080 443
 
     # Copy Project & API
-    COPY /${project.folderName} project
+    COPY /project project
     COPY /api api
 
     # Start API
-    CMD cd api/; sudo RUNSCRIPT=${project.folderName}/${project.scriptName} node api.js`;
+    CMD cd api/; sudo RUNSCRIPT=${runScriptPath} node api.js`;
 };
