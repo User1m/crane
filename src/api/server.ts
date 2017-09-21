@@ -37,7 +37,7 @@ const readRequest = (req: any, res: any) => {
   if (req.method === "POST" && mime === "application/octet-stream") {
     console.log("PROCESSING IMAGE RAW DATA.....");
     req.setEncoding("binary");
-    req.on("data", function(chunk: Buffer) {
+    req.on("data", function(chunk: any) {
       data += chunk;
       // 1e6 === 1 * Math.pow(10, 6) === 1 * 1000000 ~~~ 1MB
       if (data.length > 10 * Math.pow(10, 6)) {
@@ -57,34 +57,36 @@ const readRequest = (req: any, res: any) => {
 
 const saveImageToDisk = data => {
   console.log("SAVING IMAGE TO DISK.....");
-  fs.writeFile("/input.jpg", data, "binary", (err: Error) => {
+  fs.writeFile("/input.png", data, "binary", (err: Error) => {
     if (err) {
       console.log("ERROR!!! SAVING IMAGE TO DISK.....");
       console.log(err);
     } else {
       console.log("FINISH SAVING IMAGE TO DISK.....");
-      console.log(`input.jpg: IMAGE SAVED`);
-      executeScript((process as any).env.RUNSCRIPT, "/input.jpg", resAlias);
+      console.log(`input.png: IMAGE SAVED`);
+      executeScript((process as any).env.RUNSCRIPT, "/input.png", resAlias);
     }
   });
 };
 
 const executeScript = (runScript: string, input: string, res: any) => {
-  sh.exec(`/usr/bin/python project/${runScript} ${input}`, function(
-    code: any,
-    stdout: any,
-    stderr: any
-  ) {
-    if (code !== 0) {
-      console.log("Exit code:", code);
-      console.log("Program stderr:", stderr);
-      console.log("executeScript ERRORED OUT");
-    } else {
-      console.log("Program output:", stdout);
-      console.log("FINISHED RUNNING executeScript SCRIPT.....");
-      res.json(JSON.stringify(stdout, null, 2));
+  sh.cd("../project/");
+  //     `KERAS_BACKEND=theano /usr/bin/python ${runScript} ${input}`,
+
+  sh.exec(
+    `KERAS_BACKEND=theano /usr/bin/python ${runScript} ./images/8.png`,
+    function(code: any, stdout: any, stderr: any) {
+      if (code !== 0) {
+        console.log("Exit code:", code);
+        console.log("Program stderr:", stderr);
+        console.log("executeScript ERRORED OUT");
+      } else {
+        console.log("Program output:", stdout);
+        console.log("FINISHED RUNNING executeScript SCRIPT.....");
+        res.json(JSON.stringify(stdout, null, 2));
+      }
     }
-  });
+  );
 };
 
 app.listen(port);

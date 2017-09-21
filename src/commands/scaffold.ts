@@ -14,7 +14,7 @@ import {
 } from "../file-templates/docker-ignore.template";
 
 const prompt = syncPrompt();
-const PROJECT_DIR = "/project";
+const PROJECT_DIR = "project";
 
 export function scaffoldCommand(cliArgs: any): void {
   console.log(chalk.yellow("CraneML needs some user information"));
@@ -40,18 +40,23 @@ export function scaffoldCommand(cliArgs: any): void {
     process.exit(1);
   }
 
-  const runScript = prompt("Enter the entry point of your model: ");
+  const runScript = path.join(
+    PROJECT_DIR,
+    prompt(
+      `Enter the relative path to the entry point of your model (${PROJECT_DIR}/<pathToEntryPoint>): `
+    )
+  );
 
   if (!fs.pathExistsSync("./" + projectName)) {
     // project doesnt exist
     fs.ensureDirSync(projectName);
-    createProject(projectName, dockerMaintainer);
+    createProject(projectName, dockerMaintainer, runScript);
   } else {
     // project exists check for force flag
     const forceFlag = cliArgs.f;
     if (forceFlag) {
       fs.remove(projectName);
-      createProject(projectName, dockerMaintainer);
+      createProject(projectName, dockerMaintainer, runScript);
       process.exit(0);
     }
 
@@ -60,23 +65,25 @@ export function scaffoldCommand(cliArgs: any): void {
   }
 }
 
-function createProject(projectName: string, maintainer: User): void {
+function createProject(
+  projectName: string,
+  maintainer: User,
+  runScript: string
+): void {
   fs.ensureDirSync(projectName);
   fs.ensureDirSync(path.join(projectName, PROJECT_DIR));
   fs.outputFileSync(
     path.join(projectName, DOCKER_FILE_NAME),
     generateDockerFile(maintainer, {
       folderName: "project",
-      runScript: "main.py"
+      runScript: runScript,
+      requirements: ""
     })
   );
   fs.outputFileSync(
     path.join(projectName, DOCKER_IGNORE_FILE_NAME),
     generateDockerIgnoreFile("project")
   );
-  fs.outputFileSync(
-    path.join(projectName, "requirements.txt"),
-    ""
-  );
+  fs.outputFileSync(path.join(projectName, "requirements.txt"), "");
   console.log(`Project ${projectName} created.`);
 }
