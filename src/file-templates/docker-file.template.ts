@@ -14,7 +14,10 @@ export interface ProjectInfo {
 
 export const DOCKER_FILE_NAME = "Dockerfile";
 
-export const generateDockerFile = (user: User, project: ProjectInfo) => {
+export const generateDockerFile = (
+  user: User,
+  project: { folderName: string; scriptName: string }
+) => {
   return `
     # Start with ML base image
     FROM floydhub/dl-docker:cpu

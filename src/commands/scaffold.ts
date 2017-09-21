@@ -62,7 +62,10 @@ function createProject(projectName: string, maintainer: User): void {
   fs.ensureDirSync(path.join(projectName, PROJECT_DIR));
   fs.outputFileSync(
     path.join(projectName, DOCKER_FILE_NAME),
-    generateDockerFile(maintainer, {})
+    generateDockerFile(maintainer, {
+      folderName: "project",
+      scriptName: "main.py"
+    })
   );
   fs.outputFileSync(
     path.join(projectName, DOCKER_IGNORE_FILE_NAME),

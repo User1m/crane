@@ -3,6 +3,7 @@ import * as fs from "fs-extra";
 import * as path from "path";
 import * as chalk from "chalk";
 import * as sh from "shelljs";
+import * as Preferences from "preferences";
 
 import {
   User,
@@ -14,6 +15,8 @@ import {
   DOCKER_IGNORE_FILE_NAME,
   generateDockerIgnoreFile
 } from "../file-templates/docker-ignore.template";
+
+const userPrefs = new Preferences("craneml");
 
 const questions = [
   {
@@ -66,12 +69,14 @@ export function createCommand(cliArgs: any): void {
 function getUserInfo(): void {
   console.log(chalk.yellow("CraneML needs some user information"));
   prompt(questions).then(userInfo => {
+    userPrefs.userInfo = userInfo;
     create(userInfo);
   });
 }
 
 function create(userInfo: User): void {
   prompt(createQs).then(projectInfo => {
+    userPrefs.projectInfo = projectInfo;
     createDockerFile(projectInfo, userInfo);
   });
 }
