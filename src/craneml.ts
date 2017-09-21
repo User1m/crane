@@ -151,10 +151,6 @@ export class Program {
     return Promise.resolve(this.userPrefs.user);
   }
 
-  public getContact(name: string): void {
-    console.log(`Getting: ${name}`);
-  }
-
   public create(): void {
     this.checkUserPrefs().then(success => {
       if (!success) {
@@ -162,7 +158,7 @@ export class Program {
       } else {
         console.log(
           chalk.red(
-            "Make sure to put all project file dependencies into the same folder before continuing"
+            "Make sure to put all project file dependencies into the same folder before continuing ..."
           )
         );
         prompt(createQs).then(answers => {
@@ -217,6 +213,14 @@ export class Program {
           chalk.yellow(
             `Note: Update the .dockerignore before running "craneml build" so only the files needed are included in the docker context.`
           )
+        );
+      })
+      .then(() => {
+        sh.cp("-f", "./api/", `${answers.parentPath}/api/`);
+      })
+      .then(() => {
+        console.log(
+          chalk.yellow(`API created for you at ${answers.parentPath}/api`)
         );
       })
       .catch((err: Error) => {
