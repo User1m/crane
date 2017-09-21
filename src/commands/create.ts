@@ -121,7 +121,7 @@ function createDockerFile(projectInfo: ProjectInfo, user: User): void {
       );
     })
     .then(() => {
-      sh.cp("-Rf", "./dist/api/", `${projectInfo.parentPath}/api/`);
+      sh.cp("-Rf", "./dist/api/", `${projectInfo.parentPath}`);
     })
     .then(() => {
       console.log(
