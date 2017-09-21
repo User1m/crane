@@ -1,6 +1,6 @@
 module.exports = {
   target: "node",
-  entry: "./index.js",
+  entry: "./dist/index.js",
   output: {
     path: __dirname,
     filename: "bundle.js",

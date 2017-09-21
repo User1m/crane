@@ -1,18 +1,15 @@
 {
   "name": "craneml",
   "version": "1.0.0",
-  "description": "CraneML is a command line tool to, not only help you containerize your ML model, but also enables you to quickly lift and deploy it to the cloud with an endpoint.",
+  "description":
+    "CraneML is a command line tool to, not only help you containerize your ML model, but also enables you to quickly lift and deploy it to the cloud with an endpoint.",
   "main": "./dist/index.js",
   "repository": "git@github.com:User1m/craneml.git",
   "author": "Claudius Mbemba <clmb@microsoft.com>",
   "license": "MIT",
   "private": false,
   "preferGlobal": true,
-  "keywords": [
-    "Docker",
-    "Containers",
-    "ML"
-  ],
+  "keywords": ["Docker", "Containers", "ML"],
   "bin": {
     "craneml": "./dist/index.js"
   },
@@ -21,12 +18,15 @@
     "install-crane": "npm install -g",
     "build": "tsc -p tsconfig.json",
     "watch": "tsc -w -p tsconfig.json",
-    "pack": "webpack"
+    "pack": "webpack",
+    "pack-api":
+      "webpack dist/api/server.js --output-path ./dist/api/ --output-filename api.js"
   },
   "devDependencies": {
     "@types/bluebird": "^3.5.11",
     "@types/inquirer": "^0.0.35",
     "@types/node": "^8.0.28",
+    "express": "~4.0.0",
     "typescript": "^2.5.2",
     "webpack": "^3.6.0"
   },
@@ -36,6 +36,7 @@
     "clear": "^0.0.1",
     "clui": "^0.3.6",
     "commander": "^2.11.0",
+    "express": "~4.0.0",
     "figlet": "^1.2.0",
     "inquirer": "^3.3.0",
     "lodash": "^4.17.4",

@@ -89,11 +89,8 @@ const generateDocker = (answers: Answers, user: User) => {
   EXPOSE 80 8080 443
 
   # Copy Project & API
-  COPY /${answers.folderName} model
+  COPY /${answers.folderName} project
   COPY /api api
-
-  # Setup node
-  RUN cd api;  npm i;
 
   # Start APP and API
   CMD cd ../api; sudo npm start
