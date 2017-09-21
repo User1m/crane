@@ -1,30 +1,42 @@
-export interface DockerMaintainer {
-    firstName: string;
-    lastName: string;
-    email: string;
+export interface User {
+  firstName: string;
+  lastName: string;
+  email: string;
 }
 
-export const DOCKER_FILE_NAME = 'Dockerfile';
+export interface ProjectInfo {
+  parentPath: string;
+  folderName: string;
+  scriptName: string;
+  imageName: string;
+  gpu?: string;
+}
 
-export const generateDockerFile = (user: DockerMaintainer) => `# Start with ML base image
-FROM floydhub/dl-docker:cpu
-MAINTAINER ${user.firstName} ${user.lastName} ${user.email}
+export const DOCKER_FILE_NAME = "Dockerfile";
 
-# Set ~/home as working directory
-WORKDIR /home
+export const generateDockerFile = (user: User, project: ProjectInfo) => {
+  return `
+    # Start with ML base image
+    FROM floydhub/dl-docker:cpu
+    MAINTAINER ${user.firstName} ${user.lastName} ${user.email}
 
-# Set ENV Vars
-ENV PORT 80
+    # Install Node
+    RUN sudo apt-get update; curl -sL "https://deb.nodesource.com/setup_8.x" | sudo bash -; sudo apt-get install -y nodejs;
+    RUN sudo pip install opencv-python; sudo pip install --upgrade keras;
 
-# Expose ports
-EXPOSE 80 8080 443
+    # Set ~/home as working directory
+    WORKDIR /home
 
-# Copy Project & API
-COPY /api api
-COPY /project project
+    # Set ENV Vars
+    ENV PORT 80
 
-# Setup node
-RUN cd api;  npm i;
+    # Expose ports
+    EXPOSE 80 8080 443
 
-# Start APP and API
-CMD cd ../api; sudo npm start`;
+    # Copy Project & API
+    COPY /${project.folderName} project
+    COPY /api api
+
+    # Start API
+    CMD cd api/; sudo RUNSCRIPT=${project.folderName}/${project.scriptName} node api.js`;
+};
