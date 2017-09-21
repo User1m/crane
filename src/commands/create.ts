@@ -4,6 +4,7 @@ import * as path from "path";
 import * as chalk from "chalk";
 import * as sh from "shelljs";
 import * as Preferences from "preferences";
+import { prompt } from "inquirer"; // require inquirerjs library
 
 import {
   User,
@@ -59,8 +60,6 @@ const createQs = [
     message: "Enter the name your container should be called ..."
   }
 ];
-
-const prompt = syncPrompt();
 
 export function createCommand(cliArgs: any): void {
   getUserInfo();
