@@ -26,6 +26,7 @@ export const generateDockerFile = (
     # Install Node
     RUN sudo apt-get update; curl -sL "https://deb.nodesource.com/setup_8.x" | sudo bash -; sudo apt-get install -y nodejs;
     RUN sudo pip install opencv-python; sudo pip install --upgrade pip keras h5py theano tensorflow;
+    RUN sudo pip isntall -r requirements.txt;
 
     # Set ~/home as working directory
     WORKDIR /home
