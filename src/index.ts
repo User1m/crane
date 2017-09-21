@@ -1,52 +1,35 @@
 #!/usr/bin/env node
-import { Program } from "./craneml";
-import * as commander from "commander";
-const program = commander;
-const _process = process as any;
+import * as chalk from "chalk";
+import * as clear from "clear";
+import * as figlet from "figlet";
+import * as minimist from "minimist";
+import { commands } from "./commands";
 
-program
-  .version("0.0.1")
-  .description("Containerize and deploy ML solutions with ease");
+const DEFAULT_COMMAND = "help";
 
-const craneml = new Program();
+const cliArguments = minimist(process.argv.slice(2));
+const commandName =
+  cliArguments._.length > 0 ? cliArguments._.shift() : DEFAULT_COMMAND;
+let command = commands[commandName];
 
-program
-  .command("create | c")
-  .alias("c")
-  .description("creates a dockerfile and .dockerignore")
-  .action(() => {
-    craneml.create();
-  });
-
-program
-  .command("build | b ")
-  .alias("b")
-  .description("builds a docker image from a dockerfile")
-  .option(
-    "-v, --verbose",
-    "Outputs the Docker commands craneml is executing in the background"
+clear();
+console.log(
+  chalk.yellow(
+    figlet.textSync("CraneML", {
+      horizontalLayout: "full"
+    })
   )
-  .action(options => {
-    craneml.build(options.verbose);
-  });
+);
 
-program
-  .command("run | r ")
-  .alias("r")
-  .description("creates a local docker container runs a docker image from")
-  .option(
-    "-v, --verbose",
-    "Outputs the Docker commands craneml is executing in the background"
-  )
-  .action(options => {
-    craneml.run(options.verbose);
-  });
-
-craneml.start();
-
-// Assert that a VALID command is provided
-if (!_process.argv.slice(2).length || !/[cbr]/.test(_process.argv.slice(2))) {
-  program.outputHelp();
-  _process.exit();
+if (!command) {
+  console.log(`Unknown command: ${commandName}`);
+  command = commands[DEFAULT_COMMAND];
 }
-program.parse(_process.argv);
+
+const helpFlag = cliArguments.h;
+if (helpFlag) {
+  console.log(command.help);
+  process.exit(0);
+}
+
+command.fn(cliArguments);
