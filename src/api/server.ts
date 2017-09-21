@@ -70,7 +70,7 @@ const saveImageToDisk = data => {
 };
 
 const executeScript = (runScript: string, input: string, res: any) => {
-  sh.exec(`/usr/bin/python /project/${runScript} ${input}`, function(
+  sh.exec(`/usr/bin/python project/${runScript} ${input}`, function(
     code: any,
     stdout: any,
     stderr: any

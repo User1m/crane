@@ -89,7 +89,10 @@ function createDockerFile(projectInfo: ProjectInfo, user: User): void {
   fs
     .writeFile(
       `${projectInfo.parentPath}/Dockerfile`,
-      generateDockerFile(user, projectInfo)
+      generateDockerFile(user, {
+        folderName: projectInfo.folderName,
+        runScript: projectInfo.scriptName
+      })
     )
     .then(() => {
       console.log(

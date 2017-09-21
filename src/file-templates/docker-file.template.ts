@@ -16,7 +16,7 @@ export const DOCKER_FILE_NAME = "Dockerfile";
 
 export const generateDockerFile = (
   user: User,
-  project: { folderName: string; scriptName: string }
+  project: { folderName: string; runScript: string }
 ) => {
   return `
     # Start with ML base image
@@ -25,7 +25,7 @@ export const generateDockerFile = (
 
     # Install Node
     RUN sudo apt-get update; curl -sL "https://deb.nodesource.com/setup_8.x" | sudo bash -; sudo apt-get install -y nodejs;
-    RUN sudo pip install opencv-python; sudo pip install --upgrade keras;
+    RUN sudo pip install opencv-python; sudo pip install --upgrade pip keras h5py theano tensorflow;
 
     # Set ~/home as working directory
     WORKDIR /home
@@ -41,5 +41,5 @@ export const generateDockerFile = (
     COPY /api api
 
     # Start API
-    CMD cd api/; sudo RUNSCRIPT=${project.folderName}/${project.scriptName} node api.js`;
+    CMD cd api/; sudo RUNSCRIPT=${project.runScript} node api.js`;
 };
