@@ -4,7 +4,7 @@ import * as path from "path";
 import * as chalk from "chalk";
 import * as sh from "shelljs";
 import * as Preferences from "preferences";
-import { prompt } from "inquirer"; // require inquirerjs library
+import { prompt } from "inquirer";
 
 import {
   User,
@@ -17,7 +17,7 @@ import {
   generateDockerIgnoreFile
 } from "../file-templates/docker-ignore.template";
 
-const userPrefs = new Preferences("craneml");
+let userPrefs;
 
 const questions = [
   {
@@ -62,15 +62,20 @@ const createQs = [
 ];
 
 export function createCommand(cliArgs: any): void {
+  userPrefs = new Preferences("craneml");
   getUserInfo();
 }
 
 function getUserInfo(): void {
   console.log(chalk.yellow("CraneML needs some user information"));
-  prompt(questions).then(userInfo => {
-    userPrefs.userInfo = userInfo;
-    create(userInfo);
-  });
+  if (!userPrefs.userInfo) {
+    prompt(questions).then(userInfo => {
+      userPrefs.userInfo = userInfo;
+      create(userInfo);
+    });
+  } else {
+    create(userPrefs.userInfo);
+  }
 }
 
 function create(userInfo: User): void {
