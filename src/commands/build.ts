@@ -24,25 +24,30 @@ export function buildCommand(cliArgs: any): void {
 
 function build(verbose: boolean) {
   buildDockerContainer(
-    `${userPrefs.projectInfo.parentPath}/Dockerfile`,
     userPrefs.projectInfo.imageName,
     verbose
   );
 }
 
 function buildDockerContainer(
-  dockerFile: string,
   imageName: string,
   verbose: boolean
 ) {
   if (verbose) {
     console.log(
-      `\n-------------------------\nDocker command: \ndocker build --force-rm --no-cache -f ${dockerFile} -t ${imageName} ${userPrefs
-        .projectInfo.parentPath}\n-------------------------\n`
+      `\n-------------------------\nDocker command: \ndocker build --force-rm --no-cache -t ${imageName} .\n-------------------------\n`
     );
   }
-  sh.exec(
-    `sudo docker build --force-rm --no-cache -f ${dockerFile} -t ${imageName} ${userPrefs
-      .projectInfo.parentPath}`
-  );
+
+  if(fs.existsSync(DOCKER_FILE_NAME)) {
+    try {
+      sh.exec(
+        `docker build --force-rm --no-cache -t ${imageName} .`
+      );
+    } catch(e) {
+      console.log(chalk.red(e));
+    }
+  } else {
+    console.log(chalk.red('No Dockerfile found. Ensure the directory containing Dockerfile is the current working directory.'));
+  }
 }
